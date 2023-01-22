@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 app.post('/data', jsonParser, (req, res) => {
     const username = req.body.username
     const password = req.body.password
-    username === 'username' & password === 'password' ? res.send({token: token}) : res.send('Incorrect data')
+    username === '1' & password === '1' ? res.send({token: token}) : res.send('Incorrect data')
 })
 
 app.listen(port, function () {
