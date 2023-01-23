@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const jsonParser = bodyParser.json()
 const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator')
+const dotEnv = require('dotenv').config()
 const token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 const port = 3000
 app.use(cors())
@@ -33,20 +34,16 @@ app.post('/confirm-otp', jsonParser, (req, res)=> {
 })
 
 app.post('/terms-and-conditions', jsonParser, (req, res)=> {
-
     tokenProvidedByFE = req.header('authorization').split(' ')[1];
-    console.log("OTP DO REQUEST", req.header('authorization'))
-
     var jwtVerificedToken = jwt.verify(tokenProvidedByFE, 'shhhhh');
-
     if(jwtVerificedToken) {
         res.send({ok: 'verified'})
     } else {
         res.send('fail')
     }
-
 })
 
 app.listen(port, function () {
+    console.log("process", process.env.S3_BUCKET) // remove this after you've confirmed it is working
     console.log('CORS-enabled web server listening on port 80')
 })
