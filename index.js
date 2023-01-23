@@ -12,21 +12,29 @@ app.use(cors())
 const username = '1';
 const password = '1';
 const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+let requestUsername;
+let requestPassword;
 
 app.get('/', (req, res) => {
     res.send('Node JS Express server [JWT Token + CORS + JSON Parser]')
 })
 
-app.post('/data', jsonParser, (req, res) => {
-    otp === req.body.otp ? res.send({token: token}) : res.send('Incorrect OTP. Please insert the correct data')
-})
-
-app.get('/otp', (req, res) => {
+app.post('/get-otp', jsonParser, (req, res) => {
+    console.log("REQUEST", req.body)
+    requestUsername = req.body.username;
+    requestPassword = req.body.password;
     res.send({OTP: otp})
 })
 
-app.post('/otp', jsonParser, (req, res)=> {
-    username === req.body.username & password === req.body.password ? res.send({OTP: otp}) : res.send('Incorrect login or password. Please insert the correct data.')
+app.post('/confirm-otp', jsonParser, (req, res)=> {
+    console.log("OTP VALUE", req.body.otp)
+    otp === req.body.otp && (username === requestUsername && password === requestPassword) ? res.send({token: token}) : res.send('Incorrect data. Please insert the correct data')
+})
+
+app.post('/terms-and-conditions', jsonParser, (req, res)=> {
+    console.log("OTP DO NODE JS", token)
+    console.log("OTP DO REQUEST", req.body.token)
+    token === req.body.token ? res.send({data: 'accepted'}) : res.send({data: 'wrong otp'});
 })
 
 app.listen(port, function () {
