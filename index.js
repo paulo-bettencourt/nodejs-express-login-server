@@ -14,6 +14,7 @@ const password = '1';
 const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
 let requestUsername;
 let requestPassword;
+let tokenProvidedByFE;
 
 app.get('/', (req, res) => {
     res.send('Node JS Express server [JWT Token + CORS + JSON Parser]')
@@ -32,9 +33,18 @@ app.post('/confirm-otp', jsonParser, (req, res)=> {
 })
 
 app.post('/terms-and-conditions', jsonParser, (req, res)=> {
-    console.log("OTP DO NODE JS", token)
-    console.log("OTP DO REQUEST", req.body.token)
-    token === req.body.token ? res.send({data: 'accepted'}) : res.send({data: 'wrong otp'});
+
+    tokenProvidedByFE = req.header('authorization').split(' ')[1];
+    console.log("OTP DO REQUEST", req.header('authorization'))
+
+    var jwtVerificedToken = jwt.verify(tokenProvidedByFE, 'shhhhh');
+
+    if(jwtVerificedToken) {
+        res.send({ok: 'verified'})
+    } else {
+        res.send('fail')
+    }
+
 })
 
 app.listen(port, function () {
